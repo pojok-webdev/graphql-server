@@ -57,23 +57,13 @@ var express = require('express'),
             employeeData.push(args.input)
             return {id:args.input.id}
         },
-        updateEmployee:(args)=>{
-            const employee = find(employeeData,{id:args.id})
+        updateEmployee:(arg)=>{
+            const employee = root.getEmployee(arg.input)
             if(!employee){
                 console.log("Employee not found")
             }else{
-                employee.username = args.username
-                employee.level = args.level
-                return employee
-            }
-        },
-        updateEmployee_:(id)=>{
-            const employee = getEmployee(id)
-            if(!employee){
-                console.log("Employee not found")
-            }else{
-                employee.username = args.username
-                employee.level = args.level
+                employee.username = arg.input.username
+                employee.level = arg.input.level
                 return employee
             }
         },

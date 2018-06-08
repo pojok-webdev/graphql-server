@@ -59,3 +59,76 @@ Restart=always
 - cd /lib/systemd/system/
 - sudo systemctl enable <service name>
 - systemctl add-wants multi-user.target <servicename>.service
+
+# Query
+## Untuk meretrieve record tertentu 
+Jalankan dari browser http://localhost:4000/graphql
+
+{
+  getEmployee(id:1){
+    username
+    id
+    division{
+      name
+    }
+  }
+}
+
+
+{
+  getDivision(id:2){
+    description
+    name
+  }
+  
+}
+
+## Untuk meretrieve keseluruhan record 
+{
+  getDivisions{
+    name
+    id
+  }
+}
+
+{
+  getEmployees{
+    username
+    id
+    division{
+      name
+    }
+  }
+}
+
+# Mutation
+## Untuk menyimpan record dilakukan sebagai berikut
+mutation {
+  saveDivision(input :{id:1,name:"Sales",description:"Sales Marketing"}){
+    id
+    name
+    description
+  }
+  
+}
+
+mutation{
+  saveEmployee(input:{id:5,username:"Bebop",level:1,division:{
+    id:1,name:"TS",description:"Technical Support"
+  }})
+  {
+    username
+    level
+    division{
+      name
+    }
+  }
+}
+
+## Untuk update dilakukan sebagai berikut
+mutation {
+  updateEmployee_(input:{id:1,username:"Felice",level:7})
+  {
+    id,level,username
+  }
+}
