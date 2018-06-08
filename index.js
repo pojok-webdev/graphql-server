@@ -17,7 +17,8 @@ var express = require('express'),
         type Division {
             id: Int,
             name: String,
-            description: String
+            description: String,
+            employee: [Employee]
         },
         input DivisionInput{
             id: Int,
@@ -32,16 +33,21 @@ var express = require('express'),
         },
         type Mutation {
             saveEmployee(input:EmployeeInput): Employee,
+            updateEmployee(input:EmployeeInput): Employee,
             saveDivision(input: DivisionInput): Division
         }
     `),
     employeeData = [],
     divisionData = [],
     root = { 
-        getEmployee: (id)=>{
+        getEmployee: (arg)=>{
+	        console.log("Get Employee Invoked",arg.id);
             return employeeData.filter(employee=>{
-                return employee.id == id
-            });
+                if(employee.id==arg.id){
+                    console.log("Employee",employee);
+                    return employee
+                }
+            })[0];
         },
         getEmployees: ()=>{
             return employeeData
@@ -51,14 +57,36 @@ var express = require('express'),
             employeeData.push(args.input)
             return {id:args.input.id}
         },
+        updateEmployee:(args)=>{
+            const employee = find(employeeData,{id:args.id})
+            if(!employee){
+                console.log("Employee not found")
+            }else{
+                employee.username = args.username
+                employee.level = args.level
+                return employee
+            }
+        },
+        updateEmployee_:(id)=>{
+            const employee = getEmployee(id)
+            if(!employee){
+                console.log("Employee not found")
+            }else{
+                employee.username = args.username
+                employee.level = args.level
+                return employee
+            }
+        },
         saveDivision :(args)=>{
             console.log("Add DIvision",args)
             divisionData.push(args.input)
             return {id:args.input.id}
         },
-        getDivision: (id)=>{
+        getDivision: (arg)=>{
+
+            console.log("Param:",arg);
             return divisionData.filter(division=>{
-                return division.id == id
+                return division.id == arg.id
             })[0]
         },
         getDivisions: ()=>{
